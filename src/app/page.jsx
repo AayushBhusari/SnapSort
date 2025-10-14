@@ -2,18 +2,12 @@
 
 import React from "react";
 import Link from "next/link";
-import Header from "@/Components/Header";
 import Image from "next/image";
 import heroImage from "../../public/bruh.png"; // replace with your actual generated image path
 
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#b5f3f1] via-[#fbc2eb] to-[#fff4e6] text-slate-800 flex flex-col">
-      {/* Header */}
-      <div className="px-6 pt-6">
-        <Header />
-      </div>
-
       {/* Hero Section */}
       <section className="flex flex-col-reverse md:flex-row items-center justify-between px-8 md:px-16 py-16 gap-10">
         {/* Text Content */}

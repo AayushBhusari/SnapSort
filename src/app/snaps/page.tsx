@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Header from "@/Components/Header";
 import UploadArea from "@/Components/UploadArea";
 import Gallery from "@/Components/Gallery";
 import TagEditor from "@/Components/TagEditor";
@@ -128,7 +127,6 @@ export default function Page() {
   // ---------------- JSX ----------------
   return (
     <div className="min-h-screen p-6 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#b5f3f1] via-[#fbc2eb] to-[#fff4e6] flex flex-col gap-6">
-      <Header />
       <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="md:col-span-2 flex flex-col gap-6">
           <UploadArea onFiles={handleFiles} />
