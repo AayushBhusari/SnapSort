@@ -33,7 +33,7 @@ const Header = () => {
       </div>
       <div className="flex items-center gap-3">
         <button className="px-4 py-2 rounded-full bg-gradient-to-r from-purple-400 to-yellow-400 text-white font-semibold shadow-md hover:brightness-105 transition">
-          <Link href="/">SnapSort</Link>
+          <Link href="/snaps">SnapSort</Link>
         </button>
         <button className="px-4 py-2 rounded-full bg-gradient-to-r from-green-400 to-orange-400 text-white font-semibold shadow-md hover:brightness-105 transition">
           <Link href="/gallery">My Gallery</Link>

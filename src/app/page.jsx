@@ -1,175 +1,97 @@
 "use client";
 
-import React, { useState, useRef } from "react";
-import Header from "@/app/Components/Header";
-import UploadArea from "@/app/Components/UploadArea";
-import ImageCard from "@/app/Components/ImageCard";
-import Gallery from "@/app/Components/Gallery";
-import TagEditor from "@/app/Components/TagEditor";
-import AiPanel from "@/app/Components/Aipanel";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import React from "react";
+import Link from "next/link";
+import Header from "@/Components/Header";
+import Image from "next/image";
+import heroImage from "../../public/bruh.png"; // replace with your actual generated image path
 
-// ----- Main SnapSort Component -----
-export default function Page() {
-  const [images, setImages] = useState([]);
-  const [selected, setSelected] = useState(null);
-  const [aiSuggestions, setAiSuggestions] = useState([]);
-
-  const handleFiles = (newImages) => {
-    setImages((prev) => [...newImages, ...prev]);
-  };
-
-  const toggleSelect = (img) => {
-    const isSelected = selected && selected.id === img.id;
-    const newSelected = isSelected ? null : img;
-    setSelected(newSelected);
-
-    if (newSelected && newSelected.file) {
-      // fetch AI tags only for the newly selected image
-      AiSuggest(newSelected.file, setAiSuggestions);
-    } else {
-      setAiSuggestions([]); // clear AI suggestions if deselected
-    }
-  };
-
-  const rescan = () => {
-    if (selected && selected.file) AiSuggest(selected.file, setAiSuggestions);
-  };
-
-  const addTag = (tag) => {
-    if (!selected) return;
-    setImages((list) =>
-      list.map((i) =>
-        i.id === selected.id
-          ? { ...i, tags: Array.from(new Set([...i.tags, tag])) }
-          : i
-      )
-    );
-    setSelected((s) => ({
-      ...s,
-      tags: Array.from(new Set([...(s?.tags || []), tag])),
-    }));
-  };
-
-  const removeTag = (tag) => {
-    if (!selected) return;
-    setImages((list) =>
-      list.map((i) =>
-        i.id === selected.id
-          ? { ...i, tags: i.tags.filter((t) => t !== tag) }
-          : i
-      )
-    );
-    setSelected((s) => ({
-      ...s,
-      tags: (s?.tags || []).filter((t) => t !== tag),
-    }));
-  };
-
-  //gets the image tags using ai and a description as well
-  const AiSuggest = async (selectedFile, setAiSuggestions) => {
-    if (!selectedFile) return;
-    setAiSuggestions(["fetching-tags..."]);
-
-    const genAI = new GoogleGenerativeAI(
-      process.env.NEXT_PUBLIC_GEMINI_API || "YOUR_API_KEY"
-    ); // replace key
-    const systemPrompt =
-      "Generate relevant descriptive tags for this image. Limit to 5 tags, no spaces or special characters.";
-
-    try {
-      console.log("bruh");
-      // Convert image file to base64
-      const base64Data = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(",")[1]);
-        reader.onerror = (err) => reject(err);
-        reader.readAsDataURL(selectedFile); // selectedFile is now a File object
-      });
-
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-      const result = await model.generateContent([
-        {
-          inlineData: {
-            mimeType: selectedFile.type,
-            data: base64Data,
-          },
-        },
-        { text: `${systemPrompt}` },
-      ]);
-
-      const aiText = result.response?.text() || "";
-      const tags = aiText
-        .split(/,|\n|\s/)
-        .map((t) => t.trim())
-        .filter((t) => t.length > 0)
-        .slice(0, 5);
-
-      setAiSuggestions(tags);
-    } catch (err) {
-      console.error("Gemini API error:", err);
-      setAiSuggestions(["error-fetching-tags"]);
-    }
-  };
-
-  const saveAll = () => {
-    //add multer and cloudinary to send to the backend and save there along with the date timestamps details and tags
-    alert(`Saved ${images.length} images with tags!`);
-  };
-
+export default function HomePage() {
   return (
-    <div className="min-h-screen p-6 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#b5f3f1] via-[#fbc2eb] to-[#fff4e6] flex flex-col gap-6">
-      <Header />
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2 flex flex-col gap-6">
-          <UploadArea onFiles={handleFiles} />
-          <Gallery
-            images={images}
-            selected={selected}
-            onSelect={toggleSelect}
-          />
+    <main className="min-h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#b5f3f1] via-[#fbc2eb] to-[#fff4e6] text-slate-800 flex flex-col">
+      {/* Header */}
+      <div className="px-6 pt-6">
+        <Header />
+      </div>
+
+      {/* Hero Section */}
+      <section className="flex flex-col-reverse md:flex-row items-center justify-between px-8 md:px-16 py-16 gap-10">
+        {/* Text Content */}
+        <div className="flex flex-col gap-6 max-w-xl">
+          <h1 className="font-poppins text-4xl md:text-6xl font-semibold leading-tight text-slate-800">
+            Organize Your Photos <br />
+            <span className="bg-gradient-to-r from-cyan-400 to-pink-500 bg-clip-text text-transparent">
+              The Funky AI Way 🎨
+            </span>
+          </h1>
+          <p className="text-lg text-slate-700 leading-relaxed">
+            Meet <strong>SnapSort</strong> — your chill AI-powered photo
+            organizer. Upload, auto-tag, and sort your memories effortlessly
+            while keeping those aesthetic vibes alive.
+          </p>
+
+          <div className="flex gap-4 mt-4">
+            <Link
+              href="/gallery"
+              className="px-6 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400 text-white font-semibold shadow-lg hover:brightness-105 transition"
+            >
+              Get Started 🚀
+            </Link>
+            <Link
+              href="/about"
+              className="px-6 py-3 rounded-full bg-white/60 backdrop-blur-sm text-slate-700 font-semibold shadow-md hover:bg-white/80 transition"
+            >
+              Learn More
+            </Link>
+          </div>
         </div>
-        <aside className="rounded-2xl p-6 bg-gradient-to-br from-white/60 to-white/30 shadow-lg flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h4 className="font-poppins text-lg">Tag Editor</h4>
-            <div className="text-sm text-slate-600">
-              {selected ? "Editing" : "No image selected"}
-            </div>
+
+        {/* Hero Image */}
+        <div className="relative w-full md:w-[45%] h-[300px] md:h-[450px]">
+          <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-xl hover:scale-105 transition-transform duration-500 ease-in-out">
+            <Image
+              src={heroImage}
+              alt="SnapSort Hero Image"
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
-          <TagEditor
-            selected={selected}
-            addTag={addTag}
-            removeTag={removeTag}
-          />
-          <AiPanel
-            suggestions={aiSuggestions}
-            selected={selected}
-            addTag={addTag}
-            rescan={rescan}
-          />
-          <div className="mt-auto flex gap-3">
-            <button
-              onClick={saveAll}
-              className="flex-1 px-4 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400 text-white font-semibold shadow-lg"
-            >
-              Save All
-            </button>
-            <button
-              onClick={() => {
-                setImages([]);
-                setSelected(null);
-              }}
-              className="px-4 py-3 rounded-full bg-white/60 backdrop-blur-sm"
-            >
-              Clear
-            </button>
-          </div>
-        </aside>
+        </div>
       </section>
-      <footer className="text-center text-sm text-slate-600">
-        Made with ✨ for your memories — SnapSort
+
+      {/* Features Section */}
+      <section className="px-8 md:px-16 py-20 grid md:grid-cols-3 gap-8 text-center">
+        {[
+          {
+            title: "🎯 Smart Auto-Tags",
+            desc: "Let Gemini AI analyze your photos and suggest fun, accurate tags instantly.",
+          },
+          {
+            title: "💾 Cloud Sync",
+            desc: "Store and organize your memories safely — accessible anytime, anywhere.",
+          },
+          {
+            title: "🎨 Aesthetic Gallery",
+            desc: "Enjoy a chill, minimal, pastel-inspired interface that vibes with your creativity.",
+          },
+        ].map((feature) => (
+          <div
+            key={feature.title}
+            className="p-6 bg-white/50 rounded-2xl shadow-lg backdrop-blur-md hover:shadow-xl transition"
+          >
+            <h3 className="font-poppins text-xl font-semibold mb-2 text-slate-800">
+              {feature.title}
+            </h3>
+            <p className="text-slate-600">{feature.desc}</p>
+          </div>
+        ))}
+      </section>
+
+      {/* Footer */}
+      <footer className="text-center py-8 text-sm text-slate-600">
+        Made with ✨ and chill — SnapSort © {new Date().getFullYear()}
       </footer>
-    </div>
+    </main>
   );
 }
