@@ -119,9 +119,65 @@ export default function Page() {
     }
   };
 
-  const saveAll = () => {
-    // Add multer and cloudinary to send to backend and save there
-    alert(`Saved ${images.length} images with tags!`);
+  const handleUploadAll = async () => {
+    console.log("okay");
+    if (images.length === 0) return alert("No images to upload!");
+
+    try {
+      const uploadedResults = await Promise.all(
+        images.map(async (img) => {
+          const formData = new FormData();
+          formData.append("file", img.file);
+
+          // Upload to your Next.js API route instead of Cloudinary directly
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          if (!res.ok) {
+            throw new Error(`Upload failed for ${img.name}`);
+          }
+
+          const data = await res.json();
+
+          return {
+            url: data.secure_url,
+            public_id: data.public_id,
+            tags: img.tags,
+            uploadedAt: new Date().toISOString(),
+            name: img.name,
+          };
+        })
+      );
+
+      console.log("All images uploaded:", uploadedResults);
+
+      // Optional: Save metadata to your DB
+      console.log("saving data to db......");
+      const saveRes = await fetch("/api/saveInfo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uploads: uploadedResults }),
+      });
+
+      if (!saveRes.ok) {
+        throw new Error("Failed to save uploads to DB");
+      }
+
+      const saveData = await saveRes.json();
+
+      // Only show success if the server responds with the expected message
+      if (saveData.message === "All images saved successfully!") {
+        alert("Upload successful!");
+      } else {
+        console.error("Unexpected response from /api/saveInfo:", saveData);
+        alert("Upload completed but saving to DB failed!");
+      }
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      alert("Something went wrong while uploading!");
+    }
   };
 
   // ---------------- JSX ----------------
@@ -159,8 +215,8 @@ export default function Page() {
 
           <div className="mt-auto flex gap-3">
             <button
-              onClick={saveAll}
-              className="flex-1 px-4 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400 text-white font-semibold shadow-lg"
+              onClick={handleUploadAll}
+              className="flex-1 px-4 py-3 rounded-full bg-gradient-to-r from-cyan-400 to-pink-400 text-white font-semibold shadow-lg hover:scale-105 transition"
             >
               Save All
             </button>

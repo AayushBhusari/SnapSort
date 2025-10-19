@@ -3,11 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import heroImage from "../../public/bruh.png"; // replace with your actual generated image path
+import heroImage from "../../public/bruh.png";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#b5f3f1] via-[#fbc2eb] to-[#fff4e6] text-slate-800 flex flex-col">
+    <main className=" bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-[#b5f3f1] via-[#fbc2eb] to-[#fff4e6] text-slate-800 flex flex-col">
       {/* Hero Section */}
       <section className="flex flex-col-reverse md:flex-row items-center justify-between px-8 md:px-16 py-16 gap-10">
         {/* Text Content */}
@@ -41,16 +41,16 @@ export default function HomePage() {
         </div>
 
         {/* Hero Image */}
-        <div className="relative w-full md:w-[45%] h-[300px] md:h-[450px]">
-          <div className="absolute inset-0 rounded-3xl overflow-hidden shadow-xl hover:scale-105 transition-transform duration-500 ease-in-out">
-            <Image
-              src={heroImage}
-              alt="SnapSort Hero Image"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
+        <div className="w-full  md:w-[45%] rounded-3xl overflow-hidden shadow-xl hover:scale-105 transition-transform duration-500 ease-in-out">
+          <Image
+            src={heroImage}
+            alt="SnapSort Hero Image"
+            width={600}
+            height={600}
+            className="w-full h-auto object-cover rounded-3xl"
+            priority
+            sizes="(min-width: 768px) 45vw, 100vw"
+          />
         </div>
       </section>
 
