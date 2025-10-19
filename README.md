@@ -1,6 +1,8 @@
-# 🖼 SnapSort - Organize Your Memories
+# 🖼 SnapSortAI - Organize Your Memories
 
-## SnapSort is a playful, easy-to-use image gallery where you can upload, organize, and keep all your favorite pictures in one place. Effortlessly manage your snapshots while having fun!
+## Project link - [SnapSortAI](https://snapsortai.netlify.app/) [![Netlify Status](https://api.netlify.com/api/v1/badges/1a151f5a-12e2-4128-8c2d-66ec970a5cc6/deploy-status)](https://app.netlify.com/projects/snapsortai/deploys)
+
+## SnapSortAI is a playful, easy-to-use image gallery where you can upload, organize, and keep all your favorite pictures in one place. Effortlessly manage your snapshots while having fun!
 
 ## 🌐 Tech Stack
 
